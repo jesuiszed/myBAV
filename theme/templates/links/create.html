@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Nouveau lien{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto py-10">
+    <div class="mb-6 flex items-center gap-2">
+        <span class="material-icons text-purple-600 text-2xl">link</span>
+        <h2 class="text-2xl font-bold text-purple-700">Ajouter un nouveau lien</h2>
+    </div>
+    <form method="post" class="bg-white rounded-lg shadow p-8 space-y-6">
+        {% csrf_token %}
+        <div>
+            <label class="block mb-1 font-semibold text-gray-700">URL</label>
+            <input type="url" name="url" class="input input-bordered w-full" required placeholder="https://...">
+        </div>
+        <div>
+            <label class="block mb-1 font-semibold text-gray-700">Description</label>
+            <input type="text" name="description" class="input input-bordered w-full" placeholder="Description (optionnel)">
+        </div>
+        <div class="flex items-center gap-4 pt-2">
+            <button type="submit" class="btn btn-primary flex items-center gap-1">
+                <span class="material-icons text-base">add_link</span> Créer
+            </button>
+            <a href="{% url 'link_list' %}" class="btn btn-ghost">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

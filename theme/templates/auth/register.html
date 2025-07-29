@@ -1,0 +1,55 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% tailwind_css %}
+</head>
+<body class="bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white/90 rounded-2xl shadow-2xl p-10 w-full max-w-lg">
+        <h2 class="text-2xl font-bold text-purple-700 mb-8 text-center">Inscription</h2>
+        {% if error %}
+            <div class="mb-6 alert alert-error shadow-lg text-center">{{ error }}</div>
+        {% endif %}
+        <form method="post" enctype="multipart/form-data" class="space-y-5">
+            {% csrf_token %}
+            <div>
+                <label class="block mb-2 font-semibold text-gray-700">Nom d'utilisateur</label>
+                <input type="text" name="username" class="input input-bordered input-lg w-full" required autocomplete="username">
+            </div>
+            <div>
+                <label class="block mb-2 font-semibold text-gray-700">Email</label>
+                <input type="email" name="email" class="input input-bordered input-lg w-full" required autocomplete="email">
+            </div>
+            <div>
+                <label class="block mb-2 font-semibold text-gray-700">Mot de passe</label>
+                <input type="password" name="password" class="input input-bordered input-lg w-full" required autocomplete="new-password">
+            </div>
+            <div class="flex gap-4">
+                <div class="flex-1">
+                    <label class="block mb-2 font-semibold text-gray-700">Prénom</label>
+                    <input type="text" name="first_name" class="input input-bordered input-lg w-full" required>
+                </div>
+                <div class="flex-1">
+                    <label class="block mb-2 font-semibold text-gray-700">Nom</label>
+                    <input type="text" name="last_name" class="input input-bordered input-lg w-full" required>
+                </div>
+            </div>
+            <div>
+                <label class="block mb-2 font-semibold text-gray-700">Date de naissance</label>
+                <input type="date" name="date_of_birth" class="input input-bordered input-lg w-full" required>
+            </div>
+            <div>
+                <label class="block mb-2 font-semibold text-gray-700">Photo de profil</label>
+                <input type="file" name="profile_picture" class="file-input file-input-bordered file-input-lg w-full">
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg w-full mt-2">S'inscrire</button>
+        </form>
+        <div class="mt-6 text-center">
+            <a href="{% url 'login' %}" class="text-purple-600 hover:underline">Déjà un compte ? Se connecter</a>
+        </div>
+    </div>
+</body>
+</html>

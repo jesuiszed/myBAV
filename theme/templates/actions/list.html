@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Mes actions{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto py-10">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-purple-700">Mes actions</h2>
+        <a href="{% url 'action_create' %}" class="btn btn-primary flex items-center gap-2">
+            <span class="material-icons text-lg">add</span> Nouvelle action
+        </a>
+    </div>
+    <ul class="divide-y rounded-lg bg-white shadow">
+        {% for action in actions %}
+            <li class="py-4 px-4 flex justify-between items-center hover:bg-purple-50 transition">
+                <div>
+                    <span class="font-semibold text-purple-700">{{ action.action_title }}</span>
+                    {% if action.description %}
+                        <div class="text-gray-600 text-sm mt-1">{{ action.description }}</div>
+                    {% endif %}
+                    <div class="text-xs text-gray-400 mt-1">Ajoutée le {{ action.timestamp|date:"d/m/Y H:i" }}</div>
+                </div>
+                <form method="post" action="{% url 'action_delete' action.id %}" class="ml-4">
+                    {% csrf_token %}
+                    <button class="btn btn-error btn-xs" onclick="return confirm('Supprimer cette action ?')">
+                        <span class="material-icons text-base align-middle">delete</span>
+                    </button>
+                </form>
+            </li>
+        {% empty %}
+            <li class="py-6 text-center text-gray-400">Aucune action enregistrée.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

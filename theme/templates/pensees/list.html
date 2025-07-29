@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Mes pense-bête{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto py-10">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-pink-700">Mes pense-bête</h2>
+        <a href="{% url 'pensee_bete_create' %}" class="btn btn-primary flex items-center gap-2">
+            <span class="material-icons text-lg">add</span> Nouveau pense-bête
+        </a>
+    </div>
+    <ul class="divide-y rounded-lg bg-white shadow">
+        {% for pensee in pensees %}
+            <li class="py-4 px-4 flex justify-between items-center hover:bg-pink-50 transition">
+                <div>
+                    <span class="font-semibold text-gray-800">{{ pensee.content|truncatechars:80 }}</span>
+                    <div class="text-xs text-gray-400 mt-1">Ajouté le {{ pensee.created_at|date:"d/m/Y H:i" }}</div>
+                </div>
+                <form method="post" action="{% url 'pensee_bete_delete' pensee.id %}" class="ml-4">
+                    {% csrf_token %}
+                    <button class="btn btn-error btn-xs" onclick="return confirm('Supprimer ce pense-bête ?')">
+                        <span class="material-icons text-base align-middle">delete</span>
+                    </button>
+                </form>
+            </li>
+        {% empty %}
+            <li class="py-6 text-center text-gray-400">Aucun pense-bête enregistré.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>{% block title %}myBAV{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    {% tailwind_css %}
+</head>
+<body class="bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 text-gray-900 font-serif min-h-screen">
+
+    <!-- Navbar with clickable dropdown, center logo and icon -->
+    <nav class="bg-white/90 backdrop-blur sticky top-0 z-20 shadow-md">
+        <div class="container mx-auto flex items-center justify-between py-4 px-4 md:px-6">
+            <!-- Dropdown menu (left) -->
+            <div class="relative">
+                <button id="menu-btn" class="flex items-center px-3 py-2 rounded hover:bg-purple-100 transition focus:outline-none">
+                    <span class="material-icons text-purple-600">menu</span>
+                </button>
+                <div id="dropdown-menu" class="absolute left-0 mt-2 w-48 bg-white rounded shadow-lg opacity-0 invisible transition-opacity transition-transform duration-200 z-20">
+                    <ul class="py-2">
+                        <li><a href="{% url 'home' %}" class="block px-4 py-2 hover:bg-purple-50">Accueil</a></li>
+                        {% if user %}
+                            <li><a href="{% url 'action_list' %}" class="block px-4 py-2 hover:bg-purple-50">Actions</a></li>
+                            <li><a href="{% url 'task_list' %}" class="block px-4 py-2 hover:bg-purple-50">Tâches</a></li>
+                            <li><a href="{% url 'pensee_bete_list' %}" class="block px-4 py-2 hover:bg-purple-50">Pense-bête</a></li>
+                            <li><a href="{% url 'link_list' %}" class="block px-4 py-2 hover:bg-purple-50">Liens</a></li>
+                        {% endif %}
+                        <li><a href="#" class="block px-4 py-2 hover:bg-purple-50">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Center logo with icon -->
+            <a href="{% url 'home' %}" class="flex items-center space-x-2">
+                <span class="material-icons text-purple-600 text-3xl">dashboard</span>
+                <span class="font-bold text-2xl text-purple-700">myBAV</span>
+            </a>
+            <!-- Right user/account actions -->
+            <div class="flex items-center space-x-4">
+                {% if user %}
+                    <div class="flex items-center space-x-2">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="Profil" class="w-8 h-8 rounded-full object-cover border-2 border-purple-400">
+                        {% else %}
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-purple-200 text-purple-700 font-bold border-2 border-purple-400">
+                                {{ user.first_name|default:user.username|slice:":1"|upper }}
+                            </span>
+                        {% endif %}
+                        <span class="text-purple-700 font-semibold hidden sm:inline">{{ user.username }}</span>
+                    </div>
+                    <a href="{% url 'logout' %}" class="btn btn-sm btn-outline btn-error ml-2" title="Déconnexion">
+                        <span class="material-icons">logout</span>
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-sm btn-primary">Connexion</a>
+                    <a href="{% url 'register' %}" class="btn btn-sm btn-outline btn-primary">Inscription</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}
+        <!-- Contenu spécifique à chaque page -->
+        {% endblock %}
+    </main>
+
+    <footer class="text-center py-6 text-gray-500">
+        &copy; {{ now|date:"Y" }} myBAV. Propulsé par Django, Tailwind et daisyUI.
+    </footer>
+
+    <!-- Material Icons CDN for sidebar/menu icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script>
+        // Dropdown menu logic
+        const menuBtn = document.getElementById('menu-btn');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        let menuOpen = false;
+
+        menuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            menuOpen = !menuOpen;
+            if (menuOpen) {
+                dropdownMenu.classList.remove('opacity-0', 'invisible');
+                dropdownMenu.classList.add('opacity-100', 'visible');
+            } else {
+                dropdownMenu.classList.add('opacity-0', 'invisible');
+                dropdownMenu.classList.remove('opacity-100', 'visible');
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (menuOpen && !dropdownMenu.contains(e.target) && e.target !== menuBtn) {
+                dropdownMenu.classList.add('opacity-0', 'invisible');
+                dropdownMenu.classList.remove('opacity-100', 'visible');
+                menuOpen = false;
+            }
+        });
+    </script>
+</body>
+</html>

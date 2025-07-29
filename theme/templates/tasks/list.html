@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Mes tâches{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto py-10">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-blue-700">Mes tâches</h2>
+        <a href="{% url 'task_create' %}" class="btn btn-primary flex items-center gap-2">
+            <span class="material-icons text-lg">add</span> Nouvelle tâche
+        </a>
+    </div>
+    <ul class="divide-y rounded-lg bg-white shadow">
+        {% for task in tasks %}
+            <li class="py-4 px-4 flex justify-between items-center hover:bg-blue-50 transition">
+                <div>
+                    <span class="font-semibold text-blue-700">{{ task.title }}</span>
+                    {% if task.description %}
+                        <div class="text-gray-600 text-sm mt-1">{{ task.description }}</div>
+                    {% endif %}
+                    <div class="text-xs text-gray-400 mt-1">Ajoutée le {{ task.created_at|date:"d/m/Y H:i" }}</div>
+                    <div class="mt-1">
+                        <span class="badge
+                            {% if task.status == 'completed' %}badge-success
+                            {% elif task.status == 'in_progress' %}badge-info
+                            {% elif task.status == 'cancelled' %}badge-error
+                            {% else %}badge-warning{% endif %}">
+                            {{ task.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+                <form method="post" action="{% url 'task_delete' task.id %}" class="ml-4">
+                    {% csrf_token %}
+                    <button class="btn btn-error btn-xs" onclick="return confirm('Supprimer cette tâche ?')">
+                        <span class="material-icons text-base align-middle">delete</span>
+                    </button>
+                </form>
+            </li>
+        {% empty %}
+            <li class="py-6 text-center text-gray-400">Aucune tâche enregistrée.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
